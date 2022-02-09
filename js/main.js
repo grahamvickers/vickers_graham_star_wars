@@ -104,6 +104,30 @@ let vm = new Vue({
     // }    
 }); 
 
+// to try and make this work replace with the variable in onclick listener in the template above 
+function showFilm() {
+    let url = "https://swapi.dev/api/films/";
+
+    fetch(url).then(function(response) {
+        return response.json();
+    }).then (function(films){
+        document.querySelector("#container").innerHTML += `<div id="filmsCon"></div>`;
+        let displayFilm = document.querySelector("#filmsCon");
+
+        films.result(result=> {
+            displayFilm.innerHTML =+ `
+            <img src="images/0.png" alt="A New Hope - movie poster">
+            <div id="moreDetails">
+                <h3>${result.title}</h3> 
+                <p>Director: ${result.director}</p>
+                <p>Year: ${result.release_date}</p>
+            </div>
+            <p>${result.opening_crawl}</p>
+            `
+        });
+    })
+}
+
 function lightsaber(){
     var soundEffect = new Audio('./audio/lightsaber.mp3');
     soundEffect.play();
