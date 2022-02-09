@@ -10,9 +10,26 @@
     <title>Star Wars Character Directory</title>
 </head>
 <body>
+    <audio autoplay>
+        <source src="/audio/lightsaber.mp3">
+    </audio>
     <main id="app">
+       
+        <header>
+            <h1 class="hidden">Star Wars Character Directory</h1>
+            <img src="images/logo.png" alt="">
+        </header>
+        <section id="landing">
+            <h2>Welcome to the Star Wars character directory</h2>
+            <p>Search or select a listed character to see what episodes they stared in!</p> 
+        </section>
+        <character-list v-bind:thecharacters="characters" id="listCon">
 
+        </character-list>
     </main>
+    <footer>
+        <p>Graham vickers©</p>
+    </footer>
     <script src="js/main.js"></script>
 </body>
 </html>
