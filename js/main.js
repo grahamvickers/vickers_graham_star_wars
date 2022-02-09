@@ -10,6 +10,7 @@ Vue.component('character-list', {
         </div>
         <ul id="characterList">
             <li v-for="character in filteredCharacters">
+                <!-- toggle the onclick between mockup() and disabled to see how the app works when functional -->
                 <a onclick="mockup()" v-on:click="">{{character.name}}</a>
             </li>
         </ul>
@@ -17,7 +18,8 @@ Vue.component('character-list', {
 
     data: function() {
         return {
-            searchResult: ""
+            searchResult: "",
+            selected: ""
         }
     },
 
@@ -29,7 +31,6 @@ Vue.component('character-list', {
     // },
 
     props: ['thecharacters', 'thefilms'],
-
     computed: {
         filteredCharacters: function() {
             let characters_array = this.thecharacters;
@@ -38,9 +39,7 @@ Vue.component('character-list', {
             if(searchResult==="") {
                 return characters_array;
             }
-
             searchResult = searchResult.trim().toLowerCase();
-
             // searching array and displaying results
             characters_array = characters_array.filter(function(droid) {
                 //console.log(droid.name.toLowerCase().indexOf(searchResult));
@@ -48,36 +47,58 @@ Vue.component('character-list', {
                     return droid;
                 }
             })
-
             return characters_array;
+        },
+        displayFilm: function(){
+
         }
     }
 });
 
 // create the clicked character component to display the film
 
-// Vue.component('character-clicked', {
-//     template:
-//     `<div id="filmCon">
-//         <div id="filmDetails">
-//             <img v-bind:src="./filmName">
-//             <div id="moreDetails">
-//                 <h3>{{films.title}}<h3>
-//                 <p>Director: {{film.director}}</p>
-//                 <p>Year: {{film.release_date}}</p>
-//             </div>
-//         </div>    
-//         <p>{{films.opening_crawl}}<p>
-//     </div>`,
+Vue.component('character-clicked', {
+    template:
+    `<div id="filmCon">
+        <div id="filmDetails">
+            <img v-bind:filmposter="film">
+            <div id="moreDetails">
+                <h3>{{films.title}}</h3>
+                <p>Director: {{film.director}}</p>
+                <p>Year: {{film.release_date}}</p>
+            </div>
+        </div>    
+        <p>{{films.opening_crawl}}</p>
+    </div>`,
 
-//     props: ['filmname', 'thefilms'],
-//     computed: {
-//         filmOptions: function() {
-//             let film_array = this.film;
-//             return film_array;
-//         }
-//     }
-// });
+    props: ['thefilms'],
+    computed: {
+        // filmOptions: function() {
+        //     let film_array = this.film;
+        //     return film_array;
+        // }
+        displayFilm: function() {
+            let film_array = this.films;
+            let selected = this.selected;
+
+
+        }
+    }
+});
+
+Vue.component('film-poster', {
+    template: 
+    `<img v-bind:src="filmNames">`,
+    props: ['filmposter'],
+    computed: {
+        filmNames: function() {
+            let path = this.filmposter.url;
+            let img = path.substring(10).slice(0,-1);
+            console.log(img)
+            return `images/${img}.png`
+        }
+    }
+})
 
 // create a new vue model
 let vm = new Vue({
@@ -96,7 +117,17 @@ let vm = new Vue({
             //console.log(data)
             vm.characters = data.results;
         })
-    }  
+    },
+    selected: function() {
+        fetch('https://swapi.dev/api/films/')
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(data){
+            //console.log(data)
+            vm.films = data.results;
+        })
+    },  
 }); 
 
 let clickedVM = new Vue({
@@ -113,10 +144,8 @@ let clickedVM = new Vue({
             //console.log(data)
             vm.films = data.results;
         })
-    }, 
-    render (filmDisplay){
-        
-    }  
+    },
+    
 })
 
 // to try and make this work replace with the variable in onclick listener in the template above 
